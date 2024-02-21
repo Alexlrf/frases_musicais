@@ -1,5 +1,6 @@
 package br.com.alex.frasesmusicais.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Frase implements Serializable {
     private String texto;
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "id_artista")
-    private Artista artista;
+    @JsonBackReference
+    private Artista artista = new Artista();
 }

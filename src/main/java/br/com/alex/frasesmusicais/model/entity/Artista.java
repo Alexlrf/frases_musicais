@@ -1,10 +1,12 @@
 package br.com.alex.frasesmusicais.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,5 +20,6 @@ public class Artista implements Serializable {
     private Long idArtista;
     private String nome;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "artista")
-    private List<Frase> frases;
+    @JsonManagedReference
+    private List<Frase> frases = new ArrayList<>();
 }
