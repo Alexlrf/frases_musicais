@@ -23,7 +23,7 @@ public class FraseController {
 
     @GetMapping(value = "teste")
     public String testarConexao() {
-        return "Teste de conexão recebido";
+        return "Teste de conexão OK";
     }
 
     @PostMapping
@@ -32,9 +32,9 @@ public class FraseController {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch(Exception e) {
-            LogUtil.erro("FraseController", "incluirFrase", e);
+            LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
+            return new ResponseEntity<>(new FraseDTO(), HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
     @GetMapping
     public ResponseEntity<List<FraseDTO>> buscarFrases() {
@@ -42,9 +42,20 @@ public class FraseController {
             List<FraseDTO> frasesDto = this.fraseService.buscarFrases();
             return new ResponseEntity<>(frasesDto, HttpStatus.OK);
         } catch(Exception e) {
-            LogUtil.erro("FraseController", "buscarFrases", e);
+            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{idFrase}")
+    public ResponseEntity<FraseDTO> buscarFrase(@PathVariable Long idFrase) {
+        try {
+            FraseDTO fraseDto = this.fraseService.buscarFrase(idFrase);
+            return new ResponseEntity<>(fraseDto, HttpStatus.OK);
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
+            return new ResponseEntity<>(new FraseDTO(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

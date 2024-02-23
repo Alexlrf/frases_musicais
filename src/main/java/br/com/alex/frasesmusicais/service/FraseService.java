@@ -1,7 +1,10 @@
 package br.com.alex.frasesmusicais.service;
 
+import br.com.alex.frasesmusicais.model.dto.ArtistaDTO;
 import br.com.alex.frasesmusicais.model.dto.FraseDTO;
+import br.com.alex.frasesmusicais.model.entity.Artista;
 import br.com.alex.frasesmusicais.model.entity.Frase;
+import br.com.alex.frasesmusicais.repository.ArtistaRepository;
 import br.com.alex.frasesmusicais.repository.FraseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +19,52 @@ public class FraseService {
 
     @Autowired
     private FraseRepository fraseRepository;
+    @Autowired
+    private ArtistaRepository artistaRepository;
+
     @Transactional
     public FraseDTO incluirFrase(FraseDTO fraseDTO) {
         Frase frase = new Frase();
         BeanUtils.copyProperties(fraseDTO, frase);
-        BeanUtils.copyProperties(fraseDTO.getArtista(), frase.getArtista());
-        frase = this.fraseRepository.save(frase);
+        frase.setArtista(tratarArtistaParaInsert(fraseDTO.getArtista()));
+        Frase frasePersistida = this.fraseRepository.save(frase);
         FraseDTO fraseDtoEditada = new FraseDTO();
-        BeanUtils.copyProperties(frase, fraseDtoEditada);
-        BeanUtils.copyProperties(frase.getArtista(), fraseDtoEditada.getArtista());
+        fraseDtoEditada.setArtista(new ArtistaDTO());
+        BeanUtils.copyProperties(frasePersistida, fraseDtoEditada);
+        BeanUtils.copyProperties(frasePersistida.getArtista(), fraseDtoEditada.getArtista());
         return fraseDtoEditada;
+    }
+
+    private Artista tratarArtistaParaInsert(ArtistaDTO artistaDto) {
+        Artista artistaDB = this.artistaRepository.findArtistaByNome(artistaDto.getNome().toUpperCase());
+        artistaDto.setNome(artistaDto.getNome().toUpperCase());
+        if (artistaDB == null) {
+            assert false;
+            artistaDB = new Artista();
+            BeanUtils.copyProperties(artistaDto, artistaDB);
+        }
+        return artistaDB;
     }
 
     public List<FraseDTO> buscarFrases() {
         List<Frase> frases = this.fraseRepository.findAll();
         List<FraseDTO> frasesDto = new ArrayList<>();
-        for (Frase frase: frases) {
+        frases.forEach(frase -> {
             FraseDTO dto = new FraseDTO();
+            dto.setArtista(new ArtistaDTO());
             BeanUtils.copyProperties(frase, dto);
             BeanUtils.copyProperties(frase.getArtista(), dto.getArtista());
             frasesDto.add(dto);
-
-        }
-//        frases.forEach(frase -> {
-//            FraseDTO dto = new FraseDTO();
-//            BeanUtils.copyProperties(frase, dto);
-//            BeanUtils.copyProperties(frase.getArtista(), dto.getArtista());
-//            frasesDto.add(dto);
-//        });
+        });
         return frasesDto;
+    }
+
+    public FraseDTO buscarFrase(Long idFrase) {
+        Frase fraseDB = this.fraseRepository.findById(idFrase).orElseThrow(()->new RuntimeException("Erro ao buscar frase por ID"));
+        FraseDTO fraseDto = new FraseDTO();
+        fraseDto.setArtista(new ArtistaDTO());
+        BeanUtils.copyProperties(fraseDB, fraseDto);
+        BeanUtils.copyProperties(fraseDB.getArtista(), fraseDto.getArtista());
+        return fraseDto;
     }
 }
