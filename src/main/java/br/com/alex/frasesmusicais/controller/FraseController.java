@@ -1,11 +1,10 @@
 package br.com.alex.frasesmusicais.controller;
 
+import br.com.alex.frasesmusicais.exception.CadastroException;
 import br.com.alex.frasesmusicais.model.dto.FraseDTO;
-import br.com.alex.frasesmusicais.model.entity.Frase;
 import br.com.alex.frasesmusicais.service.FraseService;
 import br.com.alex.frasesmusicais.utils.LogUtil;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +32,10 @@ public class FraseController {
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
-            return new ResponseEntity<>(new FraseDTO(), HttpStatus.BAD_REQUEST);
+            throw new CadastroException(e.getMessage());
         }
     }
+
     @GetMapping
     public ResponseEntity<List<FraseDTO>> buscarFrases() {
         try {
@@ -43,7 +43,7 @@ public class FraseController {
             return new ResponseEntity<>(frasesDto, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
 
@@ -54,7 +54,7 @@ public class FraseController {
             return new ResponseEntity<>(fraseDto, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
-            return new ResponseEntity<>(new FraseDTO(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new FraseDTO(), HttpStatus.OK);
         }
     }
 

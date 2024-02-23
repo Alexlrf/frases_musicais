@@ -2,7 +2,9 @@ package br.com.alex.frasesmusicais.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,15 +19,22 @@ public class Frase implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_frase")
     private Long idFrase;
+
     @NotNull
+    @Size(min = 10, max = 250)
     private String texto;
+
     @NotNull
     @Column(name = "nome_musica")
+    @Size(min = 2, max = 100)
     private String nomeMusica;
+
     @Column(name = "link_video")
     private String linkVideo;
+
+    @Valid
     @NotNull
-    @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "id_artista")
+    @ManyToOne(cascade=CascadeType.PERSIST)
     private Artista artista;
 }
