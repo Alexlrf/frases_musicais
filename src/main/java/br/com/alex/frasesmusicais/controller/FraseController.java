@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -39,10 +40,19 @@ public class FraseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FraseDTO>> buscarFrases() {
+    public ResponseEntity<List<ResponseGenericoDTO>> buscarFrases() {
         try {
             List<FraseDTO> frasesDto = this.fraseService.buscarFrases();
-            return new ResponseEntity<>(frasesDto, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    Collections.singletonList( ResponseGenericoDTO.busca(
+                            frasesDto,
+                            ResponseGenericoEnum.SUCESSO_BUSCA.name()
+                            , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
+                            , null
+                    ))
+                    , HttpStatus.OK
+            );
+//            return new ResponseEntity<>(frasesDto, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);

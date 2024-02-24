@@ -62,7 +62,7 @@ public class FraseService {
     }
 
     public FraseDTO buscarFrase(Long idFrase) {
-        Frase fraseDB = this.fraseRepository.findById(idFrase).orElseThrow(()->new RuntimeException("Erro ao buscar frase por ID"));
+        Frase fraseDB = this.fraseRepository.findById(idFrase).orElseThrow(() -> new RuntimeException("Erro ao buscar frase por ID"));
         FraseDTO fraseDto = new FraseDTO();
         fraseDto.setArtista(new ArtistaDTO());
         BeanUtils.copyProperties(fraseDB, fraseDto);
