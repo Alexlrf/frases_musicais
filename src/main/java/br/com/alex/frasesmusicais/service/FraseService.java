@@ -1,5 +1,6 @@
 package br.com.alex.frasesmusicais.service;
 
+import br.com.alex.frasesmusicais.exception.GenericException;
 import br.com.alex.frasesmusicais.model.dto.ArtistaDTO;
 import br.com.alex.frasesmusicais.model.dto.FraseDTO;
 import br.com.alex.frasesmusicais.model.entity.Artista;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FraseService {
@@ -66,5 +68,22 @@ public class FraseService {
         BeanUtils.copyProperties(fraseDB, fraseDto);
         BeanUtils.copyProperties(fraseDB.getArtista(), fraseDto.getArtista());
         return fraseDto;
+    }
+
+    @Transactional
+    public FraseDTO alterarFrase(FraseDTO fraseDTO) {
+        return null;
+    }
+
+    public void deletarFrase(Long idFrase) {
+        Optional<Frase> fraseDB = this.fraseRepository.findById(idFrase);
+        fraseDB.ifPresentOrElse(
+            frase -> this.fraseRepository.deleteById(idFrase),
+            () -> {
+                throw new GenericException(
+                      String.format("Frase de identificador %s não encontrada para ser deletada", idFrase)
+                );
+            }
+        );
     }
 }
