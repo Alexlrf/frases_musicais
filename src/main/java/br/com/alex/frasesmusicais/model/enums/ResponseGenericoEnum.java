@@ -2,16 +2,18 @@ package br.com.alex.frasesmusicais.model.enums;
 
 public enum ResponseGenericoEnum {
 
-    SUCESSO("Sucesso ao excluir registro"),
-    ERRO("Erro ao excluir registro");
+    SUCESSO_EXCLUSAO("Sucesso ao excluir registro"),
+    ERRO_EXCLUSAO("Erro ao excluir registro"),
+    SUCESSO_BUSCA("Sucesso ao buscar registro"),
+    ERRO_BUSCA("Erro ao buscar registro");
 
-    private final String mensagemExclusao;
+    private final String mensagem;
 
-    ResponseGenericoEnum(String msgExclusao) {
-        this.mensagemExclusao = msgExclusao;
+    ResponseGenericoEnum(String msg) {
+        this.mensagem = msg;
     }
 
-    public String getMensagemExclusao() {
-        return this.mensagemExclusao;
+    public String getMensagem() {
+        return this.mensagem;
     }
 }
