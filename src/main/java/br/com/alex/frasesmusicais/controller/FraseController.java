@@ -2,6 +2,8 @@ package br.com.alex.frasesmusicais.controller;
 
 import br.com.alex.frasesmusicais.exception.CadastroException;
 import br.com.alex.frasesmusicais.model.dto.FraseDTO;
+import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
+import br.com.alex.frasesmusicais.model.enums.ResponseGenericoEnum;
 import br.com.alex.frasesmusicais.service.FraseService;
 import br.com.alex.frasesmusicais.utils.LogUtil;
 import jakarta.validation.Valid;
@@ -29,7 +31,7 @@ public class FraseController {
     public ResponseEntity<FraseDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
             throw new CadastroException(e.getMessage());
@@ -56,6 +58,47 @@ public class FraseController {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
             return new ResponseEntity<>(new FraseDTO(), HttpStatus.OK);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity<FraseDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
+        try {
+            FraseDTO dto = this.fraseService.alterarFrase(fraseDTO);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "alterarFrase", e);
+            throw new CadastroException(e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/{idFrase}")
+    public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
+        ResponseGenericoDTO responseGenericoDTO;
+        try {
+            this.fraseService.deletarFrase(idFrase);
+            return montarResponseExclusao(
+                    ResponseGenericoEnum.SUCESSO.name()
+                    , ResponseGenericoEnum.SUCESSO.getMensagemExclusao()
+                    , null
+                    , HttpStatus.OK
+            );
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "deletarFrase", e);
+            return montarResponseExclusao(
+                    ResponseGenericoEnum.ERRO.name()
+                    , ResponseGenericoEnum.ERRO.getMensagemExclusao()
+                    , e
+                    , HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    private ResponseEntity<ResponseGenericoDTO> montarResponseExclusao(String tipoRetorno, String mensagemExclusao, Exception msgDetalheErro, HttpStatus status) {
+        return new ResponseEntity<>(new ResponseGenericoDTO(
+                tipoRetorno
+                , mensagemExclusao
+                , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
+        ), status);
     }
 
 }

@@ -1,6 +1,5 @@
 package br.com.alex.frasesmusicais.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
