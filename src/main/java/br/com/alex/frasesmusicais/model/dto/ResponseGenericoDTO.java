@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -24,16 +22,15 @@ public class ResponseGenericoDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String detalheErro;
 
-    @JsonInclude(value= JsonInclude.Include.NON_EMPTY, content= JsonInclude.Include.NON_EMPTY)
-    private List<Object> body;
+    private Object body;
 
-    public static List<ResponseGenericoDTO> buscaTodos(List<Object> body, String tipoRetorno, String mensagemBusca, Exception msgDetalheErro) {
-        return Collections.singletonList(new ResponseGenericoDTO(
+    public static ResponseGenericoDTO buscaTodos(List<Object> body, String tipoRetorno, String mensagemBusca, Exception msgDetalheErro) {
+        return new ResponseGenericoDTO(
                 tipoRetorno
                 , mensagemBusca
                 , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
                 , body
-        ));
+        );
     }
 
     public static ResponseGenericoDTO busca(Object body, String tipoRetorno, String mensagemBusca, Exception msgDetalheErro) {
@@ -41,7 +38,7 @@ public class ResponseGenericoDTO {
                 tipoRetorno
                 , mensagemBusca
                 , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
-                , body != null ? Collections.singletonList(body) : null
+                , body
         );
     }
 
@@ -51,7 +48,7 @@ public class ResponseGenericoDTO {
                 tipoRetorno
                 , mensagemExclusao
                 , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
-                , body != null ? new ArrayList<>() : null
+                , body
         );
     }
 
