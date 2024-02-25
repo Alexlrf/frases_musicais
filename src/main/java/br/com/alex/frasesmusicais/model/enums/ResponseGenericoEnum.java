@@ -2,6 +2,8 @@ package br.com.alex.frasesmusicais.model.enums;
 
 public enum ResponseGenericoEnum {
 
+    SUCESSO_INCLUSAO("Sucesso ao incluir registro"),
+    ERRO_INCLUSAO("Erro ao incluir registro"),
     SUCESSO_EXCLUSAO("Sucesso ao excluir registro"),
     ERRO_EXCLUSAO("Erro ao excluir registro"),
     SUCESSO_BUSCA("Sucesso ao buscar registro"),

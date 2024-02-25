@@ -28,13 +28,27 @@ public class FraseController {
     }
 
     @PostMapping
-    public ResponseEntity<FraseDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
+    public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
-            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+            return new ResponseEntity<>(
+                ResponseGenericoDTO.busca(
+                        dto,
+                    ResponseGenericoEnum.SUCESSO_INCLUSAO.name()
+                    , ResponseGenericoEnum.SUCESSO_INCLUSAO.getMensagem()
+                    , null
+                ), HttpStatus.CREATED);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
-            throw new CadastroException(e.getMessage());
+            return new ResponseEntity<>(
+                ResponseGenericoDTO.busca(
+                    null,
+                    ResponseGenericoEnum.ERRO_INCLUSAO.name()
+                    , ResponseGenericoEnum.ERRO_INCLUSAO.getMensagem()
+                    , e
+                )
+                , HttpStatus.BAD_REQUEST
+            );
         }
     }
 
