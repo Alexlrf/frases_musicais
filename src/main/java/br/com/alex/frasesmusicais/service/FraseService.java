@@ -72,7 +72,33 @@ public class FraseService {
 
     @Transactional
     public FraseDTO alterarFrase(FraseDTO fraseDTO) {
-        return null;
+        Frase fraseDB = buscarFraseDB(fraseDTO);
+        Artista artistaDB = this.artistaRepository.findArtistaByNome(fraseDTO.getArtista().getNome().toUpperCase());
+        if (artistaDB != null) {
+            fraseDB.setArtista(artistaDB);
+        } else {
+            fraseDTO.getArtista().setIdArtista(null);
+            Artista artistaNovo = new Artista();
+            BeanUtils.copyProperties(fraseDTO.getArtista(), artistaNovo);
+            artistaNovo.setNome(fraseDTO.getArtista().getNome().toUpperCase());
+            artistaNovo= this.artistaRepository.save(artistaNovo);
+            fraseDB.setArtista(artistaNovo);
+        }
+        BeanUtils.copyProperties(fraseDTO, fraseDB);
+        Frase fraseAlterada = this.fraseRepository.save(fraseDB);
+        FraseDTO fraseResponse = new FraseDTO();
+        fraseResponse.setArtista(new ArtistaDTO());
+        BeanUtils.copyProperties(fraseAlterada.getArtista(), fraseResponse.getArtista());
+        BeanUtils.copyProperties(fraseAlterada, fraseResponse);
+        return fraseResponse;
+    }
+
+    private Frase buscarFraseDB(FraseDTO fraseDTO) {
+        if (fraseDTO.getIdFrase() == null || fraseDTO.getArtista().getIdArtista() == null) {
+            throw new GenericException("Frase ou Artista não encontrado para alteração");
+        }
+        return this.fraseRepository.findById(fraseDTO.getIdFrase())
+                .orElseThrow(() -> new RuntimeException("Frase não encontrada para alteração"));
     }
 
     public void deletarFrase(Long idFrase) {
