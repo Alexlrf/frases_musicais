@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,29 +22,10 @@ public class ResponseGenericoDTO {
 
     private Object body;
 
-    public static ResponseGenericoDTO buscaTodos(List<Object> body, String tipoRetorno, String mensagemBusca, Exception msgDetalheErro) {
+    public static ResponseGenericoDTO retornaResponse(Object body, String tipoRetorno, String mensagem, Exception msgDetalheErro) {
         return new ResponseGenericoDTO(
                 tipoRetorno
-                , mensagemBusca
-                , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
-                , body
-        );
-    }
-
-    public static ResponseGenericoDTO busca(Object body, String tipoRetorno, String mensagemBusca, Exception msgDetalheErro) {
-        return new ResponseGenericoDTO(
-                tipoRetorno
-                , mensagemBusca
-                , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
-                , body
-        );
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static ResponseGenericoDTO exclusao(Object body, String tipoRetorno, String mensagemExclusao, Exception msgDetalheErro) {
-        return new ResponseGenericoDTO(
-                tipoRetorno
-                , mensagemExclusao
+                , mensagem
                 , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
                 , body
         );
