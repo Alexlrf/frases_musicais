@@ -32,9 +32,7 @@ public class FraseService {
         Frase frasePersistida = this.fraseRepository.save(frase);
         FraseDTO fraseDtoEditada = new FraseDTO();
         fraseDtoEditada.setArtista(new ArtistaDTO());
-        BeanUtils.copyProperties(frasePersistida, fraseDtoEditada);
-        BeanUtils.copyProperties(frasePersistida.getArtista(), fraseDtoEditada.getArtista());
-        return fraseDtoEditada;
+        return retornarResponse(frasePersistida, fraseDtoEditada);
     }
 
     private Artista tratarArtistaParaInsert(ArtistaDTO artistaDto) {
@@ -54,9 +52,7 @@ public class FraseService {
         frases.forEach(frase -> {
             FraseDTO dto = new FraseDTO();
             dto.setArtista(new ArtistaDTO());
-            BeanUtils.copyProperties(frase, dto);
-            BeanUtils.copyProperties(frase.getArtista(), dto.getArtista());
-            frasesDto.add(dto);
+            frasesDto.add(retornarResponse(frase, dto));
         });
         return frasesDto;
     }
@@ -65,14 +61,21 @@ public class FraseService {
         Frase fraseDB = this.fraseRepository.findById(idFrase).orElseThrow(() -> new RuntimeException("Erro ao buscar frase por ID"));
         FraseDTO fraseDto = new FraseDTO();
         fraseDto.setArtista(new ArtistaDTO());
-        BeanUtils.copyProperties(fraseDB, fraseDto);
-        BeanUtils.copyProperties(fraseDB.getArtista(), fraseDto.getArtista());
-        return fraseDto;
+        return retornarResponse(fraseDB, fraseDto);
     }
 
     @Transactional
     public FraseDTO alterarFrase(FraseDTO fraseDTO) {
         Frase fraseDB = buscarFraseDB(fraseDTO);
+        tratarArtista(fraseDTO, fraseDB);
+        BeanUtils.copyProperties(fraseDTO, fraseDB);
+        Frase fraseAlterada = this.fraseRepository.save(fraseDB);
+        FraseDTO fraseResponse = new FraseDTO();
+        fraseResponse.setArtista(new ArtistaDTO());
+        return retornarResponse(fraseAlterada, fraseResponse);
+    }
+
+    private void tratarArtista(FraseDTO fraseDTO, Frase fraseDB) {
         Artista artistaDB = this.artistaRepository.findArtistaByNome(fraseDTO.getArtista().getNome().toUpperCase());
         if (artistaDB != null) {
             fraseDB.setArtista(artistaDB);
@@ -84,13 +87,6 @@ public class FraseService {
             artistaNovo= this.artistaRepository.save(artistaNovo);
             fraseDB.setArtista(artistaNovo);
         }
-        BeanUtils.copyProperties(fraseDTO, fraseDB);
-        Frase fraseAlterada = this.fraseRepository.save(fraseDB);
-        FraseDTO fraseResponse = new FraseDTO();
-        fraseResponse.setArtista(new ArtistaDTO());
-        BeanUtils.copyProperties(fraseAlterada.getArtista(), fraseResponse.getArtista());
-        BeanUtils.copyProperties(fraseAlterada, fraseResponse);
-        return fraseResponse;
     }
 
     private Frase buscarFraseDB(FraseDTO fraseDTO) {
@@ -111,5 +107,11 @@ public class FraseService {
                 );
             }
         );
+    }
+
+    private FraseDTO retornarResponse(Frase frase, FraseDTO fraseDto) {
+        BeanUtils.copyProperties(frase.getArtista(), fraseDto.getArtista());
+        BeanUtils.copyProperties(frase, fraseDto);
+        return fraseDto;
     }
 }
