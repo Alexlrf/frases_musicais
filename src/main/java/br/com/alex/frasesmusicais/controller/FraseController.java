@@ -1,6 +1,5 @@
 package br.com.alex.frasesmusicais.controller;
 
-import br.com.alex.frasesmusicais.exception.CadastroException;
 import br.com.alex.frasesmusicais.model.dto.FraseDTO;
 import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
 import br.com.alex.frasesmusicais.model.enums.ResponseGenericoEnum;
@@ -32,7 +31,7 @@ public class FraseController {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                         dto,
                     ResponseGenericoEnum.SUCESSO_INCLUSAO.name()
                     , ResponseGenericoEnum.SUCESSO_INCLUSAO.getMensagem()
@@ -41,7 +40,7 @@ public class FraseController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                     null,
                     ResponseGenericoEnum.ERRO_INCLUSAO.name()
                     , ResponseGenericoEnum.ERRO_INCLUSAO.getMensagem()
@@ -61,7 +60,7 @@ public class FraseController {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
         }
         return new ResponseEntity<>(
-            ResponseGenericoDTO.busca(
+            ResponseGenericoDTO.retornaResponse(
                 frasesDto,
                 ResponseGenericoEnum.SUCESSO_BUSCA.name()
                 , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
@@ -76,7 +75,7 @@ public class FraseController {
         try {
             FraseDTO fraseDto = this.fraseService.buscarFrase(idFrase);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                     fraseDto,
                     ResponseGenericoEnum.SUCESSO_BUSCA.name()
                     , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
@@ -87,7 +86,7 @@ public class FraseController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                     null,
                     ResponseGenericoEnum.ERRO_BUSCA.name()
                     , ResponseGenericoEnum.ERRO_BUSCA.getMensagem()
@@ -99,13 +98,29 @@ public class FraseController {
     }
 
     @PutMapping
-    public ResponseEntity<FraseDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
+    public ResponseEntity<ResponseGenericoDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.alterarFrase(fraseDTO);
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+            return new ResponseEntity<>(
+                ResponseGenericoDTO.retornaResponse(
+                    dto,
+                    ResponseGenericoEnum.SUCESSO_ALTERACAO.name()
+                    , ResponseGenericoEnum.SUCESSO_ALTERACAO.getMensagem()
+                    , null
+                )
+                , HttpStatus.OK
+            );
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "alterarFrase", e);
-            throw new CadastroException(e.getMessage());
+            return new ResponseEntity<>(
+                ResponseGenericoDTO.retornaResponse(
+                    null,
+                    ResponseGenericoEnum.ERRO_ALTERACAO.name()
+                    , ResponseGenericoEnum.ERRO_ALTERACAO.getMensagem()
+                    , e
+                )
+                , HttpStatus.BAD_REQUEST
+            );
         }
     }
 
@@ -114,7 +129,7 @@ public class FraseController {
         try {
             this.fraseService.deletarFrase(idFrase);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                     null,
                     ResponseGenericoEnum.SUCESSO_EXCLUSAO.name()
                     , ResponseGenericoEnum.SUCESSO_EXCLUSAO.getMensagem()
@@ -125,7 +140,7 @@ public class FraseController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "deletarFrase", e);
             return new ResponseEntity<>(
-                ResponseGenericoDTO.busca(
+                ResponseGenericoDTO.retornaResponse(
                     null,
                     ResponseGenericoEnum.ERRO_EXCLUSAO.name()
                     , ResponseGenericoEnum.ERRO_EXCLUSAO.getMensagem()
