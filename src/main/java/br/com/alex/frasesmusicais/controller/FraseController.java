@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/frases")
-public class FraseController {
+public class FraseController extends AbstractResponse{
 
     @Autowired
     private FraseService fraseService;
@@ -30,24 +30,10 @@ public class FraseController {
     public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                        dto,
-                    ResponseGenericoEnum.SUCESSO_INCLUSAO.name()
-                    , ResponseGenericoEnum.SUCESSO_INCLUSAO.getMensagem()
-                    , null
-                ), HttpStatus.CREATED);
+            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_INCLUSAO, null, HttpStatus.CREATED);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    null,
-                    ResponseGenericoEnum.ERRO_INCLUSAO.name()
-                    , ResponseGenericoEnum.ERRO_INCLUSAO.getMensagem()
-                    , e
-                )
-                , HttpStatus.BAD_REQUEST
-            );
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,41 +46,17 @@ public class FraseController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
         }
-        return new ResponseEntity<>(
-            ResponseGenericoDTO.retornaResponse(
-                frasesDto,
-                ResponseGenericoEnum.SUCESSO_BUSCA.name()
-                , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
-                , null
-            )
-            , HttpStatus.OK
-        );
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{idFrase}")
     public ResponseEntity<ResponseGenericoDTO> buscarFrase(@PathVariable Long idFrase) {
         try {
             FraseDTO fraseDto = this.fraseService.buscarFrase(idFrase);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    fraseDto,
-                    ResponseGenericoEnum.SUCESSO_BUSCA.name()
-                    , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
-                    , null
-                )
-                , HttpStatus.OK
-            );
+            return retornarResponse(fraseDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    null,
-                    ResponseGenericoEnum.ERRO_BUSCA.name()
-                    , ResponseGenericoEnum.ERRO_BUSCA.getMensagem()
-                    , e
-                 )
-                , HttpStatus.BAD_REQUEST
-            );
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -102,26 +64,10 @@ public class FraseController {
     public ResponseEntity<ResponseGenericoDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.alterarFrase(fraseDTO);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    dto,
-                    ResponseGenericoEnum.SUCESSO_ALTERACAO.name()
-                    , ResponseGenericoEnum.SUCESSO_ALTERACAO.getMensagem()
-                    , null
-                )
-                , HttpStatus.OK
-            );
+            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_ALTERACAO, null, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "alterarFrase", e);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    null,
-                    ResponseGenericoEnum.ERRO_ALTERACAO.name()
-                    , ResponseGenericoEnum.ERRO_ALTERACAO.getMensagem()
-                    , e
-                )
-                , HttpStatus.BAD_REQUEST
-            );
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -129,26 +75,10 @@ public class FraseController {
     public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
         try {
             this.fraseService.deletarFrase(idFrase);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    null,
-                    ResponseGenericoEnum.SUCESSO_EXCLUSAO.name()
-                    , ResponseGenericoEnum.SUCESSO_EXCLUSAO.getMensagem()
-                    , null
-                )
-                , HttpStatus.OK
-            );
+            return retornarResponse(null, ResponseGenericoEnum.SUCESSO_EXCLUSAO, null, HttpStatus.OK);
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "deletarFrase", e);
-            return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                    null,
-                    ResponseGenericoEnum.ERRO_EXCLUSAO.name()
-                    , ResponseGenericoEnum.ERRO_EXCLUSAO.getMensagem()
-                    , e
-                )
-                , HttpStatus.BAD_REQUEST
-            );
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_EXCLUSAO, e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -161,15 +91,7 @@ public class FraseController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesArtistaSelecionado", e);
         }
-        return new ResponseEntity<>(
-                ResponseGenericoDTO.retornaResponse(
-                        frasesDto,
-                        ResponseGenericoEnum.SUCESSO_BUSCA.name()
-                        , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
-                        , null
-                )
-                , HttpStatus.OK
-        );
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
 
 }
