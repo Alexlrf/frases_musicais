@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/artistas")
-public class ArtistaController {
+public class ArtistaController extends AbstractResponse{
 
     @Autowired
     private ArtistaService artistaService;
@@ -34,15 +34,7 @@ public class ArtistaController {
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarArtistas", e);
         }
-        return new ResponseEntity<>(
-            ResponseGenericoDTO.retornaResponse(
-                artistasDto,
-                ResponseGenericoEnum.SUCESSO_BUSCA.name()
-                , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
-                , null
-            )
-            , HttpStatus.OK
-        );
+        return retornarResponse(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
 
 }
