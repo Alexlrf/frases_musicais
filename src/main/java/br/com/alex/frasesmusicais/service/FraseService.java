@@ -109,9 +109,25 @@ public class FraseService {
         );
     }
 
+    public List<FraseDTO> buscarFrasesArtistaSelecionado(Long idArtista) {
+        List<Frase> frasesArtistaSelecionado = this.fraseRepository.buscarFrasesArtistaSelecionado(idArtista);
+        List<FraseDTO> frasesDto = new ArrayList<>();
+
+        if (!frasesArtistaSelecionado.isEmpty()) {
+            frasesArtistaSelecionado.forEach((frase -> {
+                FraseDTO fra = new FraseDTO();
+                ArtistaDTO art = new ArtistaDTO();
+                fra.setArtista(art);
+                frasesDto.add(retornarResponse(frase, fra));
+            }));
+        }
+        return frasesDto;
+    }
+
     private FraseDTO retornarResponse(Frase frase, FraseDTO fraseDto) {
         BeanUtils.copyProperties(frase.getArtista(), fraseDto.getArtista());
         BeanUtils.copyProperties(frase, fraseDto);
         return fraseDto;
     }
+
 }
