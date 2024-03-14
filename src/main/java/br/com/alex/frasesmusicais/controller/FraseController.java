@@ -51,6 +51,7 @@ public class FraseController {
         }
     }
 
+    @CrossOrigin("*")
     @GetMapping
     public ResponseEntity<ResponseGenericoDTO> buscarFrases() {
         List<FraseDTO> frasesDto = new ArrayList<>();
@@ -149,6 +150,26 @@ public class FraseController {
                 , HttpStatus.BAD_REQUEST
             );
         }
+    }
+
+    @CrossOrigin("*")
+    @GetMapping(value = "/artista/{idArtista}")
+    public ResponseEntity<ResponseGenericoDTO> buscarFrasesArtistaSelecionado(@PathVariable Long idArtista) {
+        List<FraseDTO> frasesDto = null;
+        try {
+            frasesDto = this.fraseService.buscarFrasesArtistaSelecionado(idArtista);
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesArtistaSelecionado", e);
+        }
+        return new ResponseEntity<>(
+                ResponseGenericoDTO.retornaResponse(
+                        frasesDto,
+                        ResponseGenericoEnum.SUCESSO_BUSCA.name()
+                        , ResponseGenericoEnum.SUCESSO_BUSCA.getMensagem()
+                        , null
+                )
+                , HttpStatus.OK
+        );
     }
 
 }
