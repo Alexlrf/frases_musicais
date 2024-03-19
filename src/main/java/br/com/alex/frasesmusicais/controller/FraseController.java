@@ -94,4 +94,16 @@ public class FraseController extends AbstractResponse{
         return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
 
+    @CrossOrigin("*")
+    @GetMapping(value = "/fragmento/{fragmento}")
+    public ResponseEntity<ResponseGenericoDTO> buscarFrasesPorTrecho(@PathVariable String fragmento) {
+        List<FraseDTO> frasesDto = null;
+        try {
+            frasesDto = this.fraseService.buscarFrasesPorTrecho(fragmento);
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesPorTrecho", e);
+        }
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+    }
+
 }
