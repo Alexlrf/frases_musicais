@@ -48,13 +48,7 @@ public class FraseService {
 
     public List<FraseDTO> buscarFrases() {
         List<Frase> frases = this.fraseRepository.findAll();
-        List<FraseDTO> frasesDto = new ArrayList<>();
-        frases.forEach(frase -> {
-            FraseDTO dto = new FraseDTO();
-            dto.setArtista(new ArtistaDTO());
-            frasesDto.add(retornarResponse(frase, dto));
-        });
-        return frasesDto;
+        return retornarListaFrasesDto(frases);
     }
 
     public FraseDTO buscarFrase(Long idFrase) {
@@ -111,10 +105,18 @@ public class FraseService {
 
     public List<FraseDTO> buscarFrasesArtistaSelecionado(Long idArtista) {
         List<Frase> frasesArtistaSelecionado = this.fraseRepository.buscarFrasesArtistaSelecionado(idArtista);
+        return retornarListaFrasesDto(frasesArtistaSelecionado);
+    }
+    public List<FraseDTO> buscarFrasesPorTrecho(String fragmento) {
+        List<Frase> frases = this.fraseRepository.findByTextoContaining(fragmento);
+        return retornarListaFrasesDto(frases);
+    }
+
+    private List<FraseDTO> retornarListaFrasesDto(List<Frase> frases) {
         List<FraseDTO> frasesDto = new ArrayList<>();
 
-        if (!frasesArtistaSelecionado.isEmpty()) {
-            frasesArtistaSelecionado.forEach((frase -> {
+        if (!frases.isEmpty()) {
+            frases.forEach((frase -> {
                 FraseDTO fra = new FraseDTO();
                 ArtistaDTO art = new ArtistaDTO();
                 fra.setArtista(art);
