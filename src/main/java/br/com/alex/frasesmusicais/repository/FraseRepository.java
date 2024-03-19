@@ -13,4 +13,6 @@ public interface FraseRepository extends JpaRepository<Frase, Long> {
     @Query(value="select f from Frase f where f.artista.idArtista = :idArtista")
     List<Frase> buscarFrasesArtistaSelecionado(Long idArtista);
 
+    List<Frase> findByTextoContaining(String fragmento);
+
 }
