@@ -101,12 +101,21 @@ public class FraseService {
                 );
             }
         );
+        confirmarUltimaFraseArtista(fraseDB.get());
+    }
+
+    private void confirmarUltimaFraseArtista(Frase fraseDB) {
+        List<Frase> frases = this.fraseRepository.buscarFrasesArtistaSelecionado(fraseDB.getArtista().getIdArtista());
+        if (frases.isEmpty()) {
+            this.artistaRepository.deleteById(fraseDB.getArtista().getIdArtista());
+        }
     }
 
     public List<FraseDTO> buscarFrasesArtistaSelecionado(Long idArtista) {
         List<Frase> frasesArtistaSelecionado = this.fraseRepository.buscarFrasesArtistaSelecionado(idArtista);
         return retornarListaFrasesDto(frasesArtistaSelecionado);
     }
+
     public List<FraseDTO> buscarFrasesPorTrecho(String fragmento) {
         List<Frase> frases = this.fraseRepository.findByTextoContaining(fragmento);
         return retornarListaFrasesDto(frases);
