@@ -26,6 +26,7 @@ public class FraseController extends AbstractResponse{
         return "Teste de conexão OK";
     }
 
+    @CrossOrigin("*")
     @PostMapping
     public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
@@ -59,7 +60,7 @@ public class FraseController extends AbstractResponse{
             return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e, HttpStatus.BAD_REQUEST);
         }
     }
-
+    @CrossOrigin("*")
     @PutMapping
     public ResponseEntity<ResponseGenericoDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
@@ -70,7 +71,7 @@ public class FraseController extends AbstractResponse{
             return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e, HttpStatus.BAD_REQUEST);
         }
     }
-
+    @CrossOrigin("*")
     @DeleteMapping(value = "/{idFrase}")
     public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
         try {
