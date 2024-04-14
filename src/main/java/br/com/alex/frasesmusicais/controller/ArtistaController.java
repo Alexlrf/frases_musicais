@@ -25,7 +25,6 @@ public class ArtistaController extends AbstractResponse{
         return "Teste de conexão OK";
     }
 
-    @CrossOrigin("*")
     @GetMapping
     public ResponseEntity<ResponseGenericoDTO> buscarArtistas() {
         List<ArtistaDTO> artistasDto = new ArrayList<>();

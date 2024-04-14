@@ -26,7 +26,6 @@ public class FraseController extends AbstractResponse{
         return "Teste de conexão OK";
     }
 
-    @CrossOrigin("*")
     @PostMapping
     public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
@@ -38,7 +37,6 @@ public class FraseController extends AbstractResponse{
         }
     }
 
-    @CrossOrigin("*")
     @GetMapping
     public ResponseEntity<ResponseGenericoDTO> buscarFrases() {
         List<FraseDTO> frasesDto = new ArrayList<>();
@@ -60,7 +58,7 @@ public class FraseController extends AbstractResponse{
             return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e, HttpStatus.BAD_REQUEST);
         }
     }
-    @CrossOrigin("*")
+
     @PutMapping
     public ResponseEntity<ResponseGenericoDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
@@ -71,7 +69,7 @@ public class FraseController extends AbstractResponse{
             return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e, HttpStatus.BAD_REQUEST);
         }
     }
-    @CrossOrigin("*")
+
     @DeleteMapping(value = "/{idFrase}")
     public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
         try {
@@ -83,7 +81,7 @@ public class FraseController extends AbstractResponse{
         }
     }
 
-    @CrossOrigin("*")
+
     @GetMapping(value = "/artista/{idArtista}")
     public ResponseEntity<ResponseGenericoDTO> buscarFrasesArtistaSelecionado(@PathVariable Long idArtista) {
         List<FraseDTO> frasesDto = null;
@@ -95,7 +93,7 @@ public class FraseController extends AbstractResponse{
         return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
 
-    @CrossOrigin("*")
+
     @GetMapping(value = "/fragmento/{fragmento}")
     public ResponseEntity<ResponseGenericoDTO> buscarFrasesPorTrecho(@PathVariable String fragmento) {
         List<FraseDTO> frasesDto = null;
