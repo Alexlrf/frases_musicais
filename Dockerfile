@@ -7,7 +7,7 @@ copy . .
 run apt-get install maven -y
 run mvn clean install
 
-from openjdk:17-jdk-slim
+from openjdk:17-alpine
 expose 8080
 
 copy --from=build /target/frasesmusicais-0.0.1-SNAPSHOT.jar app.jar
