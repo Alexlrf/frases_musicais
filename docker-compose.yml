@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  frases-network:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks: 
+      - frases-network
+    ports:
+      - 9090:9090
+  grafana: 
+    image: grafana/grafana:latest
+    ports: 
+      - 3000:3000
+    networks:
+      - frases-network
+  app:
+    build: .
+
