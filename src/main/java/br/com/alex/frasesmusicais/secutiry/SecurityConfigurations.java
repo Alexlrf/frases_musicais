@@ -27,8 +27,8 @@ public class SecurityConfigurations {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.GET,"/actuator/*").permitAll();
-                    req.requestMatchers("/v1/frasesMusicais/autenticacao").permitAll();
+                    req.requestMatchers(HttpMethod.GET,"/actuator/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST,"/v1/frasesMusicais/autenticacao").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/v1/frases").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/v1/artistas").permitAll();
                     req.anyRequest().authenticated();
