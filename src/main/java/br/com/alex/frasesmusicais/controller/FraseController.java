@@ -7,6 +7,7 @@ import br.com.alex.frasesmusicais.service.FraseService;
 import br.com.alex.frasesmusicais.utils.LogUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,17 @@ public class FraseController extends AbstractResponse{
             frasesDto = this.fraseService.buscarFrases();
         } catch(Exception e) {
             LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
+        }
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/paginado")
+    public ResponseEntity<ResponseGenericoDTO> buscarFrasesPaginado(Pageable pageable) {
+        List<FraseDTO> frasesDto = new ArrayList<>();
+        try {
+            frasesDto = this.fraseService.buscarFrasesPaginado(pageable);
+        } catch(Exception e) {
+            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesPaginado", e);
         }
         return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
     }
