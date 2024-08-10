@@ -9,6 +9,8 @@ import br.com.alex.frasesmusicais.repository.ArtistaRepository;
 import br.com.alex.frasesmusicais.repository.FraseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,11 @@ public class FraseService {
 
     public List<FraseDTO> buscarFrases() {
         List<Frase> frases = this.fraseRepository.findAll();
+        return retornarListaFrasesDto(frases);
+    }
+
+    public List<FraseDTO> buscarFrasesPaginado(Pageable pageable) {
+        List<Frase> frases = this.fraseRepository.findAll(pageable).getContent();
         return retornarListaFrasesDto(frases);
     }
 
