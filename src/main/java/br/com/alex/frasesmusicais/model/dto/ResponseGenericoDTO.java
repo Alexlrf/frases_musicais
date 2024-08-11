@@ -22,11 +22,11 @@ public class ResponseGenericoDTO {
 
     private Object body;
 
-    public static ResponseGenericoDTO retornaResponse(Object body, String tipoRetorno, String mensagem, Exception msgDetalheErro) {
+    public static ResponseGenericoDTO retornaResponse(Object body, String tipoRetorno, String mensagem, String msgDetalheErro) {
         return new ResponseGenericoDTO(
                 tipoRetorno
                 , mensagem
-                , msgDetalheErro != null ? msgDetalheErro.getMessage() : null
+                , msgDetalheErro.isEmpty() ?  null : msgDetalheErro
                 , body
         );
     }

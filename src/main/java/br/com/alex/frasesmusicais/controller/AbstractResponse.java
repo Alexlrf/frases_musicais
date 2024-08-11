@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractResponse {
     protected ResponseEntity<ResponseGenericoDTO>  retornarResponse(
-            Object body, ResponseGenericoEnum resp, Exception msgDetalheErro, HttpStatus status) {
+            Object body, ResponseGenericoEnum resp, String msgDetalheErro, HttpStatus status) {
         return new ResponseEntity<>(
             ResponseGenericoDTO.retornaResponse(
                 body
                 , resp.name()
                 , resp.getMensagem()
-                , msgDetalheErro
+                , msgDetalheErro == null ? "" : msgDetalheErro
             )
             , status
         );
