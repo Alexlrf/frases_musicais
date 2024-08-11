@@ -4,7 +4,7 @@ import br.com.alex.frasesmusicais.model.dto.ArtistaDTO;
 import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
 import br.com.alex.frasesmusicais.model.enums.ResponseGenericoEnum;
 import br.com.alex.frasesmusicais.service.ArtistaService;
-import br.com.alex.frasesmusicais.utils.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/artistas")
+@Slf4j
 public class ArtistaController extends AbstractResponse{
 
     @Autowired
@@ -31,9 +32,9 @@ public class ArtistaController extends AbstractResponse{
         try {
             artistasDto = this.artistaService.buscarArtistas();
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarArtistas", e);
+            log.error(e.getMessage(), e);
         }
-        return retornarResponse(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+        return retornarResponse(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
     }
 
 }

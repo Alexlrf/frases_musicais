@@ -3,6 +3,7 @@ package br.com.alex.frasesmusicais.exception;
 import br.com.alex.frasesmusicais.model.dto.ErroValidacaoRequestDto;
 import br.com.alex.frasesmusicais.model.dto.ResponseErroRequestDto;
 import lombok.AllArgsConstructor;
+import org.hibernate.exception.SQLGrammarException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +49,30 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new ResponseErroRequestDto(
                         "Erro ao realizar cadastro"
+                        , List.of(exception.getMessage())
+                        , HttpStatus.BAD_REQUEST.value()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(value = SQLException.class)
+    public ResponseEntity<ResponseErroRequestDto> handleSQLException(SQLException exception) {
+        return new ResponseEntity<>(
+                new ResponseErroRequestDto(
+                        "Erro ao acessar informação"
+                        , List.of(exception.getMessage())
+                        , HttpStatus.BAD_REQUEST.value()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ResponseErroRequestDto> exception(Exception exception) {
+        return new ResponseEntity<>(
+                new ResponseErroRequestDto(
+                        "Erro inesperado, verifique as informações e tente novamente"
                         , List.of(exception.getMessage())
                         , HttpStatus.BAD_REQUEST.value()
                 ),
