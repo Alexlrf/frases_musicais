@@ -4,8 +4,9 @@ import br.com.alex.frasesmusicais.model.dto.FraseDTO;
 import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
 import br.com.alex.frasesmusicais.model.enums.ResponseGenericoEnum;
 import br.com.alex.frasesmusicais.service.FraseService;
-import br.com.alex.frasesmusicais.utils.LogUtil;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/frases")
+@Slf4j
 public class FraseController extends AbstractResponse{
 
     @Autowired
@@ -31,10 +33,13 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
-            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_INCLUSAO, null, HttpStatus.CREATED);
-        } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "incluirFrase", e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, e, HttpStatus.BAD_REQUEST);
+            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_INCLUSAO, "", HttpStatus.CREATED);
+        } catch(ConstraintViolationException e) {
+            log.error(e.getMessage(), e);
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, "Erro de informações", HttpStatus.BAD_REQUEST);
+        }catch(Exception e) {
+            log.error(e.getMessage(), e);
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -44,9 +49,9 @@ public class FraseController extends AbstractResponse{
         try {
             frasesDto = this.fraseService.buscarFrases();
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrases", e);
+            log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
     }
 
     @GetMapping(value = "/paginado")
@@ -55,19 +60,19 @@ public class FraseController extends AbstractResponse{
         try {
             frasesDto = this.fraseService.buscarFrasesPaginado(pageable);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesPaginado", e);
+            log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
     }
 
     @GetMapping(value = "/{idFrase}")
     public ResponseEntity<ResponseGenericoDTO> buscarFrase(@PathVariable Long idFrase) {
         try {
             FraseDTO fraseDto = this.fraseService.buscarFrase(idFrase);
-            return retornarResponse(fraseDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+            return retornarResponse(fraseDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrase", e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -77,8 +82,8 @@ public class FraseController extends AbstractResponse{
             FraseDTO dto = this.fraseService.alterarFrase(fraseDTO);
             return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_ALTERACAO, null, HttpStatus.OK);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "alterarFrase", e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -86,10 +91,10 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
         try {
             this.fraseService.deletarFrase(idFrase);
-            return retornarResponse(null, ResponseGenericoEnum.SUCESSO_EXCLUSAO, null, HttpStatus.OK);
+            return retornarResponse(null, ResponseGenericoEnum.SUCESSO_EXCLUSAO, "", HttpStatus.OK);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "deletarFrase", e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_EXCLUSAO, e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return retornarResponse(null, ResponseGenericoEnum.ERRO_EXCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -100,9 +105,9 @@ public class FraseController extends AbstractResponse{
         try {
             frasesDto = this.fraseService.buscarFrasesArtistaSelecionado(idArtista);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesArtistaSelecionado", e);
+            log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
     }
 
 
@@ -112,9 +117,9 @@ public class FraseController extends AbstractResponse{
         try {
             frasesDto = this.fraseService.buscarFrasesPorTrecho(fragmento);
         } catch(Exception e) {
-            LogUtil.erro(this.getClass().getSimpleName(), "buscarFrasesPorTrecho", e);
+            log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, null, HttpStatus.OK);
+        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
     }
 
 }

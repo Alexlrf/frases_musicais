@@ -1,10 +1,9 @@
 package br.com.alex.frasesmusicais.model.dto;
 
 import br.com.alex.frasesmusicais.utils.annotations.MaisDeUmaPalavra;
-import br.com.alex.frasesmusicais.utils.annotations.StringComConteudo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -18,12 +17,13 @@ public class FraseDTO implements Serializable {
 
     private Long idFrase;
 
-    @NotNull
-    @Size(min = 10, max = 250)
+
+    @NotBlank
     @MaisDeUmaPalavra
+    @Size(min = 10, max = 250)
     private String texto;
 
-    @NotNull
+    @NotBlank
     @Size(min = 2, max = 100)
     @JsonProperty(value = "nome_musica")
     private String nomeMusica;
