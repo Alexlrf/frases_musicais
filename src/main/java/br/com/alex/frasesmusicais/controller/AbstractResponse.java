@@ -6,14 +6,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractResponse {
-    protected ResponseEntity<ResponseGenericoDTO>  retornarResponse(
-            Object body, ResponseGenericoEnum resp, String msgDetalheErro, HttpStatus status) {
+    protected ResponseEntity<ResponseGenericoDTO>  retornarResponseSucesso(Object body, ResponseGenericoEnum resp, HttpStatus status) {
         return new ResponseEntity<>(
             ResponseGenericoDTO.retornaResponse(
                 body
                 , resp.name()
                 , resp.getMensagem()
-                , msgDetalheErro == null ? "" : msgDetalheErro
+                , null
+            )
+            , status
+        );
+    }
+
+    protected ResponseEntity<ResponseGenericoDTO>  retornarResponseErro(ResponseGenericoEnum resp, String msgDetalheErro, HttpStatus status) {
+        return new ResponseEntity<>(
+            ResponseGenericoDTO.retornaResponse(
+                null
+                , resp.name()
+                , resp.getMensagem()
+                , msgDetalheErro
             )
             , status
         );

@@ -4,6 +4,10 @@ import br.com.alex.frasesmusicais.model.dto.ArtistaDTO;
 import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
 import br.com.alex.frasesmusicais.model.enums.ResponseGenericoEnum;
 import br.com.alex.frasesmusicais.service.ArtistaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +25,12 @@ public class ArtistaController extends AbstractResponse{
     @Autowired
     private ArtistaService artistaService;
 
-    @GetMapping(value = "teste")
-    public String testarConexao() {
-        return "Teste de conexão OK";
-    }
-
     @GetMapping
+    @Operation(summary = "Retorna artistas", description = "Retorna artistas cadastrados",
+        responses = {
+                @ApiResponse(description = "Sucesso na operação", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGenericoDTO.class))),
+        }
+    )
     public ResponseEntity<ResponseGenericoDTO> buscarArtistas() {
         List<ArtistaDTO> artistasDto = new ArrayList<>();
         try {
@@ -34,7 +38,7 @@ public class ArtistaController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
 }
