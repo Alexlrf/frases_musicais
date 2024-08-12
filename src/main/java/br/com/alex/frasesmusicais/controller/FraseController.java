@@ -49,13 +49,13 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> incluirFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.incluirFrase(fraseDTO);
-            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_INCLUSAO, "", HttpStatus.CREATED);
+            return retornarResponseSucesso(dto, ResponseGenericoEnum.SUCESSO_INCLUSAO, HttpStatus.CREATED);
         } catch(ConstraintViolationException e) {
             log.error(e.getMessage(), e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, "Erro de informações", HttpStatus.BAD_REQUEST);
+            return retornarResponseErro(ResponseGenericoEnum.ERRO_INCLUSAO, "Erro de informações", HttpStatus.BAD_REQUEST);
         }catch(Exception e) {
             log.error(e.getMessage(), e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_INCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
+            return retornarResponseErro(ResponseGenericoEnum.ERRO_INCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,7 +72,7 @@ public class FraseController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
     @GetMapping(value = "/paginado")
@@ -90,7 +90,7 @@ public class FraseController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{idFrase}")
@@ -104,10 +104,10 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> buscarFrase(@PathVariable Long idFrase) {
         try {
             FraseDTO fraseDto = this.fraseService.buscarFrase(idFrase);
-            return retornarResponse(fraseDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+            return retornarResponseSucesso(fraseDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
         } catch(Exception e) {
             log.error(e.getMessage(), e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_BUSCA, e.getMessage(), HttpStatus.BAD_REQUEST);
+            return retornarResponseErro(ResponseGenericoEnum.ERRO_BUSCA, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -122,10 +122,10 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> alterarFrase(@Valid @RequestBody FraseDTO fraseDTO) {
         try {
             FraseDTO dto = this.fraseService.alterarFrase(fraseDTO);
-            return retornarResponse(dto, ResponseGenericoEnum.SUCESSO_ALTERACAO, null, HttpStatus.OK);
+            return retornarResponseSucesso(dto, ResponseGenericoEnum.SUCESSO_ALTERACAO, HttpStatus.OK);
         } catch(Exception e) {
             log.error(e.getMessage(), e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_ALTERACAO, e.getMessage(), HttpStatus.BAD_REQUEST);
+            return retornarResponseErro(ResponseGenericoEnum.ERRO_ALTERACAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -140,10 +140,10 @@ public class FraseController extends AbstractResponse{
     public ResponseEntity<ResponseGenericoDTO> deletarFrase(@PathVariable Long idFrase) {
         try {
             this.fraseService.deletarFrase(idFrase);
-            return retornarResponse(null, ResponseGenericoEnum.SUCESSO_EXCLUSAO, "", HttpStatus.OK);
+            return retornarResponseSucesso(null, ResponseGenericoEnum.SUCESSO_EXCLUSAO, HttpStatus.OK);
         } catch(Exception e) {
             log.error(e.getMessage(), e);
-            return retornarResponse(null, ResponseGenericoEnum.ERRO_EXCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
+            return retornarResponseErro(ResponseGenericoEnum.ERRO_EXCLUSAO, e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -163,7 +163,7 @@ public class FraseController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
 
@@ -182,7 +182,7 @@ public class FraseController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(frasesDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
 }

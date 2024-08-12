@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "v1/frasesMusicais/autenticacao")
+@Slf4j
 public class AutenticacaoController {
 
     @Autowired
@@ -34,13 +36,16 @@ public class AutenticacaoController {
         }
     )
     public ResponseEntity<TokenDto> realizarLogin(@RequestBody @Valid DadosAutenticacaoDTO autenticacaoDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(autenticacaoDTO.getLogin(), autenticacaoDTO.getSenha());
-        Authentication authentication = manager.authenticate(authenticationToken);
+        String jwtToken = "";
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(autenticacaoDTO.getLogin(), autenticacaoDTO.getSenha());
+            Authentication authentication = manager.authenticate(authenticationToken);
 
-        String jwtToken = tokenService.gerarToken((Usuario) authentication.getPrincipal());
-
+            jwtToken = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         return ResponseEntity.ok(new TokenDto(jwtToken));
-
     }
 }

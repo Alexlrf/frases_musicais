@@ -38,7 +38,7 @@ public class ArtistaController extends AbstractResponse{
         } catch(Exception e) {
             log.error(e.getMessage(), e);
         }
-        return retornarResponse(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, "", HttpStatus.OK);
+        return retornarResponseSucesso(artistasDto, ResponseGenericoEnum.SUCESSO_BUSCA, HttpStatus.OK);
     }
 
 }
