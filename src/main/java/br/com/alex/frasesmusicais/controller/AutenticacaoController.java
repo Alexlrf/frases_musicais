@@ -1,9 +1,14 @@
 package br.com.alex.frasesmusicais.controller;
 
 import br.com.alex.frasesmusicais.model.dto.DadosAutenticacaoDTO;
+import br.com.alex.frasesmusicais.model.dto.ResponseGenericoDTO;
 import br.com.alex.frasesmusicais.model.dto.TokenDto;
 import br.com.alex.frasesmusicais.model.entity.Usuario;
 import br.com.alex.frasesmusicais.secutiry.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +28,11 @@ public class AutenticacaoController {
     private TokenService tokenService;
 
     @PostMapping
+    @Operation(summary = "Retorna token", description = "Retorna token Bearer após receber credenciais válidas",
+        responses = {
+                @ApiResponse(description = "Sucesso na operação", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGenericoDTO.class))),
+        }
+    )
     public ResponseEntity<TokenDto> realizarLogin(@RequestBody @Valid DadosAutenticacaoDTO autenticacaoDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(autenticacaoDTO.getLogin(), autenticacaoDTO.getSenha());
