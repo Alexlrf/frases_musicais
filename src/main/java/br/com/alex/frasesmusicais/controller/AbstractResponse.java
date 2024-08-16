@@ -12,7 +12,7 @@ public abstract class AbstractResponse {
                 body
                 , resp.name()
                 , resp.getMensagem()
-                , null
+                , ""
             )
             , status
         );
