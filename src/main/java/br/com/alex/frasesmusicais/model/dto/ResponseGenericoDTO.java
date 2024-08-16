@@ -26,7 +26,7 @@ public class ResponseGenericoDTO {
         return new ResponseGenericoDTO(
                 tipoRetorno
                 , mensagem
-                , msgDetalheErro.isEmpty() ?  null : msgDetalheErro
+                , msgDetalheErro.isBlank() ?  null : msgDetalheErro
                 , body
         );
     }
