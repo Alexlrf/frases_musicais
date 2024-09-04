@@ -19,4 +19,5 @@ public interface FraseRepository extends JpaRepository<Frase, Long>, PagingAndSo
     @Query(value="select f from Frase f join fetch f.artista")
     List<Frase> buscarFrasesCadastradas();
 
+
 }
