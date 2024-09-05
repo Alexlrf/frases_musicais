@@ -2,6 +2,7 @@ package br.com.alex.frasesmusicais.model.enums;
 
 public enum JasperReportEnum {
 
+    ARTISTAS ("classpath:imagens/img_relatorio_cabecalho.png", "classpath:jasper/artistas.jrxml"),
     FRASES ("classpath:imagens/img_relatorio_cabecalho.png", "classpath:jasper/frases.jrxml");
 
     JasperReportEnum(String imgHeader, String nomeRelatorio) {

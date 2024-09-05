@@ -91,7 +91,6 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.20.0</version>
-<!--			<version>4.5.1</version>-->
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
