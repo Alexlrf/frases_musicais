@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping(value="/relatorio")
-@Slf4j
 public class RelatorioController {
 
     @Autowired
@@ -23,15 +23,13 @@ public class RelatorioController {
     @PostMapping(value="/jasper")
     public void gerarRelatorio(HttpServletResponse response, @Valid @RequestBody JasperRequestDTO tipoRelatorio) {
         try {
-            log.info("Preparando relatório");
             response.setHeader("Content-Disposition", "inline; filename=MeuRelatorio.pdf");
             response.setContentType("application/pdf");
-            relatorioService.gerarReportJasper(response, tipoRelatorio);
+            this.relatorioService.gerarReportJasper(response, tipoRelatorio);
         } catch (JRException | IOException e) {
             log.error("Erro ao gerar relatório: {}", e.getMessage());
             throw new GenericException("Erro ao gerar relatório: " + e.getMessage());
         }
-
     }
 
 }

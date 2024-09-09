@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -31,33 +30,28 @@ public class RelatorioService{
     private ResourceLoader resourceLoader;
 
     public void gerarReportJasper(HttpServletResponse response, JasperRequestDTO request) throws IOException, JRException {
-        byte[] imgCabecalho = obterIMG(JasperReportEnum.valueOf(request.getTipoRelatorio()).getImgHeader());
-        Map<String, Object> params = new HashMap<>();
-        params.put("img_cabecalho", imgCabecalho);
 
-        log.info("Preparando arquivo...");
         Resource file = resourceLoader.getResource(JasperReportEnum.valueOf(request.getTipoRelatorio()).getNomeRalatorio());
-        log.info("Preparando compilação...");
-
         JasperReport report = JasperCompileManager.compileReport(file.getInputStream());
-//        List<Frase> frases = this.repository.buscarFrasesArtistaSelecionado(3L);        // para enviar objeto pronto para relatorio
-//        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(frases); // para enviar objeto pronto para relatorio
-        log.info("Preparando preenchimento do relatório...");
+
+        Map<String, Object> params = request.getParametros();
+        String idsArtistas = request.getParametros().get("ids_artistas").toString().replace("\"","");
+        byte[] imgCabecalho = obterIMG(JasperReportEnum.valueOf(request.getTipoRelatorio()).getImgHeader());
+        params.put("img_cabecalho", imgCabecalho);
+        params.put("P_ID_ARTISTAS", idsArtistas);
+
         Connection connection = DataSourceUtils.getConnection(dataSource);
         JasperPrint print = JasperFillManager.fillReport(report, params, connection);
-        log.info("Exportando relatório...");
         JasperExportManager.exportReportToPdfStream(print, response.getOutputStream());
-        log.info("Relatório finalizado!");
-
     }
 
     private byte[] obterIMG(String tipoRelatorio) throws IOException {
         String image = resourceLoader.getResource(tipoRelatorio).getFile().getAbsolutePath();
-        try(InputStream stream = new FileInputStream(new File(image))){
+        try(InputStream stream = new FileInputStream(image)){
             return IOUtils.toByteArray(stream);
         }catch(Exception e){
             log.error(e.getMessage());
         }
-        return null;
+        return new byte[0];
     }
 }

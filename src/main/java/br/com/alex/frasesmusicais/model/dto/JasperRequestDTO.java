@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,5 @@ public class JasperRequestDTO {
     @JsonProperty(value = "tipo_relatorio")
     private String tipoRelatorio;
 
+    private Map<String, Object> parametros;
 }
