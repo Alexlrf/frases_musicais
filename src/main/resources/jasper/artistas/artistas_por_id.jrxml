@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.20.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f99e490-8c00-4231-a028-aea889cec9f0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="artistas_por_id" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f99e490-8c00-4231-a028-aea889cec9f0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -16,12 +16,18 @@
 	<parameter name="P_IMG_CABECALHO" class="java.lang.Object"/>
 	<parameter name="P_ID_ARTISTAS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select 
+		<![CDATA[select distinct
 					ROW_NUMBER()OVER (ORDER BY nome) as linha,
-					a.id_artista, 
+					a.id_artista,
 					a.nome
 				from artista a
-				 where a.id_artista in ($P!{P_ID_ARTISTAS})]]>
+				 where a.id_artista in (SELECT
+										  CAST(
+											unnest(
+											  string_to_array($P!{P_ID_ARTISTAS}, ',')
+												  ) AS INTEGER
+											  )
+										)]]>
 	</queryString>
 	<field name="id_artista" class="java.lang.String"/>
 	<field name="nome" class="java.lang.String"/>

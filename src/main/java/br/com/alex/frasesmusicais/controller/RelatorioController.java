@@ -25,7 +25,7 @@ public class RelatorioController {
         try {
             response.setHeader("Content-Disposition", "inline; filename=MeuRelatorio.pdf");
             response.setContentType("application/pdf");
-            this.relatorioService.gerarReportJasper(response, tipoRelatorio);
+            this.relatorioService.gerarRelatorioJasper(response, tipoRelatorio);
         } catch (JRException | IOException e) {
             log.error("Erro ao gerar relatório: {}", e.getMessage());
             throw new GenericException("Erro ao gerar relatório: " + e.getMessage());
