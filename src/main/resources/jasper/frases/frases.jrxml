@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.20.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f99e490-8c00-4231-a028-aea889cec9f0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="Empty Dataset1" uuid="e16a2877-442f-4581-83a1-9c4a5fce74f3"/>
+	<parameter name="img_cabecalho" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[select
+					f.texto, 
+					f.nome_musica as nomeMusica, 
+					a.nome 
+				from
+					frase f left join artista a on a.id_artista = f.id_frase 
+				where f.id_frase in (1,2,3)]]>
+	</queryString>
+	<field name="texto" class="java.lang.String"/>
+	<field name="nomeMusica" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<title>
+		<band height="110" splitType="Stretch">
+			<image>
+				<reportElement stretchType="ContainerHeight" x="0" y="10" width="556" height="100" uuid="ffa130e5-b817-4c39-ab97-bc5bf48db02e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{img_cabecalho}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="-20" y="24" width="595" height="26" uuid="6d2b9cd5-2734-4c79-802d-6ffa6cc28154"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Relação de Frases Cadastradas]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="7" width="566" height="18" uuid="377e1ebb-47ce-4aa2-a87d-75a6d85e1670">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1b58bbc2-0701-4ed5-a790-0f12d7046c27"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="35">
+			<rectangle>
+				<reportElement stretchType="ContainerHeight" x="401" y="17" width="165" height="13" backcolor="#F5F2F2" uuid="82aa3674-52dd-48c8-be9d-520f1f70f3b7"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement stretchType="ContainerHeight" x="0" y="17" width="401" height="13" backcolor="#F5F2F2" uuid="bd85f533-ad87-4bf5-bf72-1a1ce13936cd"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="4" y="17" width="386" height="13" uuid="a5113b95-146f-4c49-a2df-7bb8651aa23e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ae12d41-1bf4-420d-92e4-782b3cb3b522"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{texto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="17" width="156" height="13" uuid="72ce1bdd-b0f7-45f2-aa96-21e79f2583c5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a01c78d6-fa65-45cd-884c-c131daf01f4b"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{nomeMusica}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="403" y="3" width="100" height="13" uuid="7b9a21ae-8886-434b-b87e-efc6c5abb19f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome da Música]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="2" width="100" height="14" uuid="2e80c099-8acf-4e90-8542-caf40b0d1217">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ae12d41-1bf4-420d-92e4-782b3cb3b522"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Texto]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class FraseController extends AbstractResponse{
         }
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Retorna frases", description = "Retorna todas as frases cadastradas",
          responses = {
             @ApiResponse(description = "Sucesso na requisição", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGenericoDTO.class))),

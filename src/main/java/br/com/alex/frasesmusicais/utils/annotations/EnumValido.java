@@ -7,16 +7,18 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = StringComConteudoClass.class)
-@Repeatable(StringComConteudo.List.class)
-public @interface StringComConteudo {
-    String message() default "não pode ser vazio ou conter somente espaços";
+@Constraint(validatedBy = EnumValidoClass.class)
+@Repeatable(EnumValido.List.class)
+public @interface EnumValido {
+    Class<? extends Enum<?>> enumClass();
+    String message() default "valor deve ser: FRASES ou ARTISTAS";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})
     @interface List {
-        StringComConteudo[] value();
+        EnumValido[] value();
     }
+
 }
