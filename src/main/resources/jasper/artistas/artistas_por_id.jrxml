@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.20.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="artistas_por_id" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f99e490-8c00-4231-a028-aea889cec9f0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="Empty Dataset1" uuid="e16a2877-442f-4581-83a1-9c4a5fce74f3"/>
+	<parameter name="P_IMG_CABECALHO" class="java.lang.Object"/>
+	<parameter name="P_ID_ARTISTAS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select distinct
+					ROW_NUMBER()OVER (ORDER BY nome) as linha,
+					a.id_artista,
+					a.nome
+				from artista a
+				 where a.id_artista in (SELECT
+										  CAST(
+											unnest(
+											  string_to_array($P!{P_ID_ARTISTAS}, ',')
+												  ) AS INTEGER
+											  )
+										)]]>
+	</queryString>
+	<field name="id_artista" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="linha" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="59" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="3" width="557" height="51" backcolor="rgba(255, 222, 207, 0.57254905)" uuid="6c534a60-1a18-410a-90d7-39b143f88016"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-20" y="24" width="595" height="30" uuid="6d2b9cd5-2734-4c79-802d-6ffa6cc28154"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relação de Artistas Cadastrados]]></text>
+			</staticText>
+			<textField pattern="MMMM d, yyyy">
+				<reportElement x="448" y="7" width="108" height="18" uuid="56a4e674-8f70-44fc-8c0f-5ac51dd73253"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="45">
+			<staticText>
+				<reportElement x="38" y="23" width="73" height="18" uuid="ab240d01-d580-40bb-a872-ae6d4f93e324"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="23" width="402" height="18" uuid="b9b73477-202b-4a64-971c-ffa152a1c29f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<line>
+				<reportElement x="36" y="36" width="483" height="1" uuid="46d412a4-f05d-4ccd-b7a1-3800802e890a"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14">
+			<rectangle>
+				<reportElement x="36" y="-1" width="483" height="15" backcolor="#F5F2F2" uuid="119743e0-2146-48a4-b6b4-c24ed2895cbe">
+					<printWhenExpression><![CDATA[($F{linha}.intValue() % 2) == 0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Transparent" x="120" y="-1" width="400" height="15" isRemoveLineWhenBlank="true" uuid="714a81dd-0fa3-41cb-adab-60dec79e98c8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5652b639-5e9d-4dc0-af84-448c4375e27f"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="38" y="-1" width="61" height="15" uuid="90cc9ff5-80a6-4cda-b113-e0279dcace74">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ebca21c-189f-4929-a1b8-da4506b31f1b"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{id_artista}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31">
+			<textField>
+				<reportElement x="495" y="8" width="29" height="19" uuid="3f17b485-dbb1-498a-9ab8-db5f06fdf940"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="534" y="8" width="25" height="19" uuid="1261c5da-bd95-4acf-9d3f-de0303bd8144"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="524" y="8" width="10" height="19" uuid="b492ed42-e667-4cbc-b1d7-198ba201806b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[/]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
