@@ -7,7 +7,6 @@ import br.com.alex.frasesmusicais.model.entity.Artista;
 import br.com.alex.frasesmusicais.model.entity.Frase;
 import br.com.alex.frasesmusicais.repository.ArtistaRepository;
 import br.com.alex.frasesmusicais.repository.FraseRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,27 +24,24 @@ public class FraseService {
     @Autowired
     private ArtistaRepository artistaRepository;
 
+    
     @Transactional
     public FraseDTO incluirFrase(FraseDTO fraseDTO) {
-        Frase frase = new Frase();
-        BeanUtils.copyProperties(fraseDTO, frase);
+        Frase frase = new Frase(fraseDTO);
         frase.setArtista(tratarArtistaParaInsert(fraseDTO.getArtista()));
         Frase frasePersistida = this.fraseRepository.save(frase);
-        FraseDTO fraseDtoEditada = new FraseDTO();
-        fraseDtoEditada.setArtista(new ArtistaDTO());
-        return retornarResponse(frasePersistida, fraseDtoEditada);
+        return new FraseDTO(frasePersistida);
     }
 
     private Artista tratarArtistaParaInsert(ArtistaDTO artistaDto) {
         Artista artistaDB = this.artistaRepository.findArtistaByNome(artistaDto.getNome().toUpperCase());
         artistaDto.setNome(artistaDto.getNome().toUpperCase());
         if (artistaDB == null) {
-            assert false;
-            artistaDB = new Artista();
-            BeanUtils.copyProperties(artistaDto, artistaDB);
+            artistaDB = new Artista(artistaDto);
         }
         return artistaDB;
     }
+    
     @Transactional(readOnly = true)
     public List<FraseDTO> buscarFrases() {
         List<Frase> frases = this.fraseRepository.buscarFrasesCadastradas();
@@ -58,31 +54,29 @@ public class FraseService {
     }
 
     public FraseDTO buscarFrase(Long idFrase) {
-        Frase fraseDB = this.fraseRepository.findById(idFrase).orElseThrow(() -> new RuntimeException("Erro ao buscar frase por ID"));
-        FraseDTO fraseDto = new FraseDTO();
-        fraseDto.setArtista(new ArtistaDTO());
-        return retornarResponse(fraseDB, fraseDto);
+        Frase fraseDB = this.fraseRepository
+        						.findById(idFrase)
+        						.orElseThrow(
+        								() -> new RuntimeException("Erro ao buscar frase por ID")
+        						);
+        return new FraseDTO(fraseDB);
     }
 
     @Transactional
     public FraseDTO alterarFrase(FraseDTO fraseDTO) {
-        Frase fraseDB = buscarFraseDB(fraseDTO);
+        Frase fraseDB = this.buscarFraseDB(fraseDTO);
         tratarArtista(fraseDTO, fraseDB);
-        BeanUtils.copyProperties(fraseDTO, fraseDB);
-        Frase fraseAlterada = this.fraseRepository.save(fraseDB);
-        FraseDTO fraseResponse = new FraseDTO();
-        fraseResponse.setArtista(new ArtistaDTO());
-        return retornarResponse(fraseAlterada, fraseResponse);
+        Frase fraseAlterada = this.fraseRepository.save(new Frase(fraseDTO));
+        return new FraseDTO(fraseAlterada);
     }
-
+    
     private void tratarArtista(FraseDTO fraseDTO, Frase fraseDB) {
         Artista artistaDB = this.artistaRepository.findArtistaByNome(fraseDTO.getArtista().getNome().toUpperCase());
         if (artistaDB != null) {
             fraseDB.setArtista(artistaDB);
         } else {
             fraseDTO.getArtista().setIdArtista(null);
-            Artista artistaNovo = new Artista();
-            BeanUtils.copyProperties(fraseDTO.getArtista(), artistaNovo);
+            Artista artistaNovo = new Artista(fraseDTO.getArtista());
             artistaNovo.setNome(fraseDTO.getArtista().getNome().toUpperCase());
             artistaNovo= this.artistaRepository.save(artistaNovo);
             fraseDB.setArtista(artistaNovo);
@@ -90,11 +84,18 @@ public class FraseService {
     }
 
     private Frase buscarFraseDB(FraseDTO fraseDTO) {
-        if (fraseDTO.getIdFrase() == null || fraseDTO.getArtista().getIdArtista() == null) {
-            throw new GenericException("Frase ou Artista não encontrado para alteração");
+        if (fraseDTO.getIdFrase() == null) {
+            throw new GenericException("Frase não encontrada para alteração");
         }
+        
+        if(fraseDTO.getArtista().getIdArtista() == null) {
+        	throw new GenericException("Artista não encontrado para alteração");
+        }
+        
         return this.fraseRepository.findById(fraseDTO.getIdFrase())
-                .orElseThrow(() -> new RuntimeException("Frase não encontrada para alteração"));
+                				   .orElseThrow(
+                						() -> new RuntimeException("Frase não encontrada para alteração")
+                					);
     }
 
     public void deletarFrase(Long idFrase) {
@@ -126,25 +127,16 @@ public class FraseService {
         List<Frase> frases = this.fraseRepository.findByTextoContaining(fragmento);
         return retornarListaFrasesDto(frases);
     }
-
+    
     private List<FraseDTO> retornarListaFrasesDto(List<Frase> frases) {
         List<FraseDTO> frasesDto = new ArrayList<>();
 
         if (!frases.isEmpty()) {
             frases.forEach((frase -> {
-                FraseDTO fra = new FraseDTO();
-                ArtistaDTO art = new ArtistaDTO();
-                fra.setArtista(art);
-                frasesDto.add(retornarResponse(frase, fra));
+                frasesDto.add(new FraseDTO(frase));
             }));
         }
         return frasesDto;
-    }
-
-    private FraseDTO retornarResponse(Frase frase, FraseDTO fraseDto) {
-        BeanUtils.copyProperties(frase.getArtista(), fraseDto.getArtista());
-        BeanUtils.copyProperties(frase, fraseDto);
-        return fraseDto;
     }
 
 }
